@@ -22,7 +22,6 @@ export default function NotesClient({ tagParam }: NotesClientProps) {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
-      setPage(1); 
     }, 500);
     return () => clearTimeout(handler);
   }, [search]);
@@ -35,6 +34,11 @@ export default function NotesClient({ tagParam }: NotesClientProps) {
     queryFn: () => fetchNotes({ page, perPage: 10, search: querySearch, tag: queryTag }),
   });
 
+  const handleSearch = (value: string) => {
+    setSearch(value);
+    setPage(1);
+  };
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
@@ -45,8 +49,7 @@ export default function NotesClient({ tagParam }: NotesClientProps) {
             Create Note +
           </Link>
       </div>
-
-      <SearchBox onSearch={setSearch} />
+      <SearchBox onSearch={handleSearch} />
 
       {isLoading && <p>Loading...</p>}
       {isError && <p>Error loading notes.</p>}
@@ -63,8 +66,6 @@ export default function NotesClient({ tagParam }: NotesClientProps) {
       ) : (
         !isLoading && <p className={css.empty}>{`No notes found`}</p>
       )}
-
-      
     </div>
   );
 }
