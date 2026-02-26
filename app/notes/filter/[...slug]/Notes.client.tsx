@@ -3,11 +3,9 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchNotes } from '@/lib/api';
-
+import Link from 'next/link';
 import SearchBox from '@/components/SearchBox/SearchBox';
 import Pagination from '@/components/Pagination/Pagination';
-import Modal from '@/components/Modal/Modal';
-import NoteForm from '@/components/NoteForm/NoteForm';
 import NoteList from '@/components/NoteList/NoteList';
 import css from '@/app/page.module.css';
 
@@ -19,7 +17,7 @@ export default function NotesClient({ tagParam }: NotesClientProps) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -43,9 +41,9 @@ export default function NotesClient({ tagParam }: NotesClientProps) {
         <h2 className={css.title}>
           {tagParam === 'all' ? 'All Notes' : `Category: ${tagParam}`}
         </h2>
-        <button onClick={() => setIsModalOpen(true)} className={css.createBtn}>
-          Create Note
-        </button>
+          <Link href="/notes/action/create" className={css.createBtn} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            Create Note +
+          </Link>
       </div>
 
       <SearchBox onSearch={setSearch} />
@@ -66,11 +64,7 @@ export default function NotesClient({ tagParam }: NotesClientProps) {
         !isLoading && <p className={css.empty}>{`No notes found`}</p>
       )}
 
-      {isModalOpen && (
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-          <NoteForm onCancel={() => setIsModalOpen(false)} />
-        </Modal>
-      )}
+      
     </div>
   );
 }
